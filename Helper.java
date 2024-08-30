@@ -10,7 +10,7 @@ public class Helper {
 
     public Helper(File file) {
         // Stores the lines in a hashmap for unordered access
-        data = new HashMap<String, String>();
+        data = new HashMap<>();
 
         // Store the file location as an instance
         this.loadedFile = file;
