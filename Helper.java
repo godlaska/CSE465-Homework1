@@ -43,7 +43,6 @@ public class Helper {
         }
 
         fileReader.close();
-        print();
     }
 
     private void print() {
