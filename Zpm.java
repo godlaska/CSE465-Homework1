@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2024 Keigen Godlaski
+ */
+
 import java.io.File;
 
 /**
@@ -25,7 +29,7 @@ public class Zpm {
             new Helper(file);
         }
         catch (Exception e) {
-            System.err.println("Cannot open file.");
+            System.out.println("An error occured with the file.");
             System.exit(0);
         }
 
