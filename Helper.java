@@ -98,6 +98,35 @@ public class Helper {
     }
 
     private void handleMinusEquals(String line) {
+        try {
+            // Split the line by "-=" to get the key and value parts
+            String[] parts = line.split("-=", 2);
+
+            // Extract and trim the key and value
+            String key = parts[0].trim();
+            String value = parts[1].trim();
+            value = value.substring(0, value.length() - 2);
+
+            // Check if the variable (key) exists in the map
+            if (!data.containsKey(key)) {
+                throw new Exception(" ");
+            }
+
+            // Retrieve the current value associated with the key
+            int currentValue = Integer.parseInt(data.get(key));
+
+            // Parse the value to be subtracted
+            int subtractedValue = Integer.parseInt(value);
+
+            // Perform the subtraction
+            int newValue = currentValue - subtractedValue;
+
+            // Update the map with the new value
+            data.put(key, String.valueOf(newValue));
+        } catch (Exception e) {
+            System.out.println("RUNTIME ERROR: line " + lineNumber);
+            System.exit(1);
+        }
     }
 
     private void handleTimesEquals(String line) {
