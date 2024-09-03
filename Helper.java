@@ -1,5 +1,6 @@
 /**
  * Copyright (c) 2024 Keigen Godlaski
+ * With coding assistance from ChatGPT
  */
 
 import java.io.File;
@@ -80,9 +81,7 @@ public class Helper {
             String value = parts[1].trim(); // The value (e.g., 5 or "5")
 
             // Remove trailing semicolon from value
-            if (value.endsWith(";")) {
-                value = value.substring(0, value.length() - 1).trim();
-            }
+            value = value.substring(0, value.length() - 1).trim();
 
             // Check if the value starts and ends with a quote
             if (value.startsWith("\"") && value.endsWith("\"")) {
@@ -102,16 +101,100 @@ public class Helper {
     }
 
     private void handleTimesEquals(String line) {
+        String[] parts = line.split("\\*=", 2);
+        try {
+            // Get the variable name on the left-hand side of "*="
+            String variableName = parts[0].trim();
+
+            // Get the value associated with the variable from the data map
+            int start = Integer.parseInt(data.get(variableName));
+
+            // Retrieve the current value associated with the variableName
+            if (!data.containsKey(variableName)) {
+                throw new Exception("");
+            }
+
+            // Trim and check the right-hand side of "*="
+            String rightSide = parts[1].trim();
+            rightSide =
+                    rightSide.substring(0, rightSide.length() - 1).trim();
+
+            int multiplier;
+
+            // Check if the right side is a variable or a direct integer value
+            if (data.containsKey(rightSide)) {
+                // It's a variable, so get its value from the data map
+                multiplier = Integer.parseInt(data.get(rightSide));
+            } else {
+                // It's a direct integer value
+                multiplier = Integer.parseInt(rightSide);
+            }
+
+            // Perform the multiplication
+            int calc = start * multiplier;
+
+            // Store the result back in the data map
+            data.put(variableName, Integer.toString(calc));
+        } catch (Exception e) {
+            System.out.println("RUNTIME ERROR: line " + lineNumber);
+            System.exit(1);
+        }
     }
 
     private void handlePlusEquals(String line) {
+        try {
+            // Split the line by "+=" to get the key and value parts
+            String[] parts = line.split("\\+=", 2);
+
+            // Extract and trim the key and value
+            String key = parts[0].trim(); // The variable name (e.g., A)
+            String addedValue = parts[1].trim(); // The value to be added
+
+            // Remove trailing semicolon from value
+            addedValue =
+                    addedValue.substring(0, addedValue.length() - 1).trim();
+
+            // Retrieve the current value associated with the key
+            String currentValue = data.get(key);
+
+            boolean isCurrentValueString = currentValue.contains("\"");
+            boolean isAddedValueString = addedValue.contains("\"");
+
+            // Check for type mismatch
+            if (isCurrentValueString != isAddedValueString) {
+                throw new Exception();
+            }
+
+            if (isCurrentValueString) {  // Both are strings
+                // Remove quotes from the string values
+                String processedCurrentValue = currentValue.substring(1,
+                        currentValue.length() - 1);
+                String processedAddedValue = addedValue.substring(1,
+                        addedValue.length() - 1);
+
+                // Concatenate the strings and add quotes
+                String newValue =
+                        "\"" + processedCurrentValue + processedAddedValue +
+                                "\"";
+                data.put(key, newValue);
+            } else {  // Both are integers
+                int currentIntValue = Integer.parseInt(currentValue);
+                int addedIntValue = Integer.parseInt(addedValue);
+                int newValue = currentIntValue + addedIntValue;
+                data.put(key, String.valueOf(newValue));
+            }
+
+        } catch (Exception e) {
+            System.out.println("RUNTIME ERROR: line " + lineNumber);
+            System.exit(1);
+        }
     }
 
     private void handleFor(String line) {
     }
 
     private void handlePrint(String text) {
-        String[] split = text.split(" ");
-        System.out.println(split[1] +  "=" + data.get(split[1]));
+        String[] parts = text.split(" ");
+        System.out.println(parts[1] +  "=" + data.get(parts[1]));
     }
 }

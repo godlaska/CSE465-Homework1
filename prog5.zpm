@@ -1,0 +1,8 @@
+A = 3 ;
+A *= 7 ;
+PRINT A ;
+B = 2 ;
+A *= B ;
+PRINT A ;
+A *= "hi" ;
+PRINT A ;
