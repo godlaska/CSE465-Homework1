@@ -180,18 +180,22 @@ public class Helper {
             String addedValue = parts[1].trim(); // The value to be added
 
             // Remove trailing semicolon from value
-            addedValue =
-                    addedValue.substring(0, addedValue.length() - 1).trim();
+            addedValue = addedValue.substring(0, addedValue.length() - 1).trim();
 
             // Retrieve the current value associated with the key
             String currentValue = data.get(key);
+
+            // Check if addedValue is a variable name (i.e., another key in the map)
+            if (data.containsKey(addedValue)) {
+                addedValue = data.get(addedValue);
+            }
 
             boolean isCurrentValueString = currentValue.contains("\"");
             boolean isAddedValueString = addedValue.contains("\"");
 
             // Check for type mismatch
             if (isCurrentValueString != isAddedValueString) {
-                throw new Exception();
+                throw new Exception("");
             }
 
             if (isCurrentValueString) {  // Both are strings
@@ -203,8 +207,7 @@ public class Helper {
 
                 // Concatenate the strings and add quotes
                 String newValue =
-                        "\"" + processedCurrentValue + processedAddedValue +
-                                "\"";
+                        "\"" + processedCurrentValue + processedAddedValue + "\"";
                 data.put(key, newValue);
             } else {  // Both are integers
                 int currentIntValue = Integer.parseInt(currentValue);
