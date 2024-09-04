@@ -105,7 +105,11 @@ public class Helper {
             // Extract and trim the key and value
             String key = parts[0].trim();
             String value = parts[1].trim();
-            value = value.substring(0, value.length() - 2);
+
+            // Remove semicolon
+            if (value.endsWith(";")) {
+                value = value.substring(0, value.length() - 1).trim();
+            }
 
             // Check if the variable (key) exists in the map
             if (!data.containsKey(key)) {
@@ -115,8 +119,15 @@ public class Helper {
             // Retrieve the current value associated with the key
             int currentValue = Integer.parseInt(data.get(key));
 
-            // Parse the value to be subtracted
-            int subtractedValue = Integer.parseInt(value);
+            // Check if the value to subtract is another variable or a direct integer
+            int subtractedValue;
+            if (data.containsKey(value)) {
+                // If the value is another variable
+                subtractedValue = Integer.parseInt(data.get(value));
+            } else {
+                // If the value is a direct integer
+                subtractedValue = Integer.parseInt(value);
+            }
 
             // Perform the subtraction
             int newValue = currentValue - subtractedValue;
@@ -180,12 +191,14 @@ public class Helper {
             String addedValue = parts[1].trim(); // The value to be added
 
             // Remove trailing semicolon from value
-            addedValue = addedValue.substring(0, addedValue.length() - 1).trim();
+            addedValue =
+                    addedValue.substring(0, addedValue.length() - 1).trim();
 
             // Retrieve the current value associated with the key
             String currentValue = data.get(key);
 
-            // Check if addedValue is a variable name (i.e., another key in the map)
+            // Check if addedValue is a variable name (i.e., another key in
+            // the map)
             if (data.containsKey(addedValue)) {
                 addedValue = data.get(addedValue);
             }
@@ -207,7 +220,8 @@ public class Helper {
 
                 // Concatenate the strings and add quotes
                 String newValue =
-                        "\"" + processedCurrentValue + processedAddedValue + "\"";
+                        "\"" + processedCurrentValue + processedAddedValue +
+                                "\"";
                 data.put(key, newValue);
             } else {  // Both are integers
                 int currentIntValue = Integer.parseInt(currentValue);
@@ -223,6 +237,33 @@ public class Helper {
     }
 
     private void handleFor(String line) {
+        try {
+            String[] parts = line.split(" ", 3);
+            int iterations = Integer.parseInt(parts[1].trim());
+
+            // Extract the body of the loop (excluding "FOR" and the
+            // iteration number)
+            String loopBody = parts[2].substring(0,
+                    parts[2].indexOf("ENDFOR")).trim();
+
+            // Split the loop body into individual statements by semicolon
+            String[] statements = loopBody.split(";");
+
+            // Execute the loop the specified number of times
+            for (int i = 0; i < iterations; i++) {
+                for (String statement : statements) {
+                    statement = statement.trim();
+                    if (!statement.isEmpty()) {
+                        // Decode and execute each statement
+                        // Adding semicolon to simulate proper statement ending
+                        decodeLine(statement + ";");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("RUNTIME ERROR: line " + lineNumber);
+            System.exit(1);
+        }
     }
 
     private void handlePrint(String text) {

@@ -1,8 +1,6 @@
-A = 3 ;
-A *= 7 ;
+A = 1 ;
+B = 0 ;
+FOR 5 B += A ; A *= 2 ; ENDFOR
+A += 1000 ;
 PRINT A ;
-B = 2 ;
-A *= B ;
-PRINT A ;
-A *= "hi" ;
-PRINT A ;
+PRINT B ;
