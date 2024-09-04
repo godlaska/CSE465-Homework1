@@ -1,6 +1,12 @@
 /**
  * Copyright (c) 2024 Keigen Godlaski
  * With coding assistance from ChatGPT
+ * @version 1.0
+ * Date: 09/04/2024
+ * The Helper class provides utility functions for processing
+ * and manipulating lines of data from a file. The class reads the file,
+ * processes each line, and decodes different types of operations such as
+ * traditional arithmetic, setting variables, for-loops, and print statements.
  */
 
 import java.io.File;
@@ -8,11 +14,30 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class Helper {
+    /**
+     * A map to store the processed data from the file.
+     * The key is the variable name, and the value is the corresponding value.
+     */
     HashMap<String, String> data;
+    /**
+     * The file that is being processed.
+     */
     File loadedFile;
+
     Scanner fileReader;
+
+    /**
+     * Keeps track of the current line number being processed.
+     */
     int lineNumber;
 
+    /**
+     * Constructs a Helper object that processes the specified file.
+     * The file is read line by line, and the contents are processed and stored
+     * in the data map.
+     *
+     * @param file the file to be processed.
+     */
     public Helper(File file) {
         // Stores the lines in a hashmap for unordered access
         data = new HashMap<>();
@@ -30,6 +55,10 @@ public class Helper {
         process();
     }
 
+    /**
+     * Processes the file line by line. Each line is trimmed of whitespace
+     * and then decoded to handle different operations.
+     */
     private void process() {
         lineNumber = 1;
 
@@ -46,6 +75,14 @@ public class Helper {
         fileReader.close();
     }
 
+    /**
+     * Decodes a line of input and determines which operation to perform
+     * based on its content.
+     * Supported operations include setting variables, arithmetic operations,
+     * and print statements.
+     *
+     * @param line the input line to be decoded and processed.
+     */
     private void decodeLine(String line) {
         // Check for PRINT or a FOR LOOP first
         if (line.startsWith("PRINT ")) {  // PRINT
@@ -97,6 +134,13 @@ public class Helper {
         }
     }
 
+    /**
+     * Handles subtraction with assignment operations e.g. -=
+     *
+     * @param line the input line to process, expected to be in the format
+     *             "key -= value;"
+     * @throws Exception if there are issues processing the line.
+     */
     private void handleMinusEquals(String line) {
         try {
             // Split the line by "-=" to get the key and value parts
@@ -119,7 +163,8 @@ public class Helper {
             // Retrieve the current value associated with the key
             int currentValue = Integer.parseInt(data.get(key));
 
-            // Check if the value to subtract is another variable or a direct integer
+            // Check if the value to subtract is another variable or a
+            // direct integer
             int subtractedValue;
             if (data.containsKey(value)) {
                 // If the value is another variable
@@ -140,6 +185,13 @@ public class Helper {
         }
     }
 
+    /**
+     * Handles multiplication with assignment operations e.g. *=
+     *
+     * @param line the input line to process, expected to be in the format
+     *             "key *= value;"
+     * @throws Exception if there are issues processing the line.
+     */
     private void handleTimesEquals(String line) {
         String[] parts = line.split("\\*=", 2);
         try {
@@ -181,6 +233,13 @@ public class Helper {
         }
     }
 
+    /**
+     * Handles addition with assignment operations e.g. +=
+     *
+     * @param line the input line to process, expected to be in the format
+     *             "key += value;"
+     * @throws Exception if there are issues processing the line.
+     */
     private void handlePlusEquals(String line) {
         try {
             // Split the line by "+=" to get the key and value parts
@@ -236,6 +295,16 @@ public class Helper {
         }
     }
 
+    /**
+     * Handles "FOR" loop operations, simulating a simple loop based on a
+     * specific format.
+     * The input line is expected to contain a "FOR" loop instruction in the
+     * format: FOR i = start TO end;. It runs the specified operation(s)
+     * until 'i' is iterated the correct amount.
+     *
+     * @param line the input line to process, expected to contain a "FOR" loop.
+     * @throws Exception if there are issues processing the line.
+     */
     private void handleFor(String line) {
         try {
             String[] parts = line.split(" ", 3);
@@ -266,8 +335,19 @@ public class Helper {
         }
     }
 
-    private void handlePrint(String text) {
-        String[] parts = text.split(" ");
+    /**
+     * Handles the "PRINT" operation, which outputs the value of a variable
+     * The input line is expected to start with "PRINT" followed by a
+     * variable name or a string.
+     * If the input is a variable, its value is retrieved from the data map
+     * and printed.
+     * If the input is intended to be a string (enclosed in double quotes), the
+     * string is printed directly.
+     *
+     * @param line the input line to process, expected to start with "PRINT ".
+     */
+    private void handlePrint(String line) {
+        String[] parts = line.split(" ");
         System.out.println(parts[1] +  "=" + data.get(parts[1]));
     }
 }

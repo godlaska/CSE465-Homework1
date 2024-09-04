@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2024 Keigen Godlaski
- */
-
-import java.io.File;
-
-/**
+ * @version 1.0
+ * Date: 09/04/2024
  * The Zpm class is an entry point for the compiler. It takes a .zpm file as a
  * command-line argument and passes it to the Helper class for the compiler
  * processing logic. If no arguments are provided or if the file cannot be
  * opened, the program will print an error message and exit.
  */
+
+import java.io.File;
+
 public class Zpm {
     /**
      * The main method of the program.
