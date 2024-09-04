@@ -1,6 +1,5 @@
 /**
- * Copyright (c) 2024 Keigen Godlaski
- * With coding assistance from ChatGPT
+ * Copyright (c) 2024 Keigen Godlaski with coding assistance from ChatGPT
  * @version 1.0
  * Date: 09/04/2024
  * The Helper class provides utility functions for processing
